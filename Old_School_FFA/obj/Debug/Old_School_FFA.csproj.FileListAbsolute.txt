@@ -1,0 +1,8 @@
+C:\Users\luist\OneDrive\Escritorio\varios\IS\Modes\Old_School_FFA\Old_School_FFA\obj\Debug\Old_School_FFA.csprojResolveAssemblyReference.cache
+C:\Users\luist\OneDrive\Escritorio\varios\IS\Modes\Old_School_FFA\Old_School_FFA\bin\Debug\Old_School_FFA.dll
+C:\Users\luist\OneDrive\Escritorio\varios\IS\Modes\Old_School_FFA\Old_School_FFA\bin\Debug\Old_School_FFA.pdb
+C:\Users\luist\OneDrive\Escritorio\varios\IS\Modes\Old_School_FFA\Old_School_FFA\bin\Debug\InfinityScript.dll
+C:\Users\luist\OneDrive\Escritorio\varios\IS\Modes\Old_School_FFA\Old_School_FFA\obj\Debug\Old_School_FFA.dll
+C:\Users\luist\OneDrive\Escritorio\varios\IS\Modes\Old_School_FFA\Old_School_FFA\obj\Debug\Old_School_FFA.pdb
+D:\Call of Duty Modern Warfare 3\scripts\Old_School_FFA.dll
+D:\Call of Duty Modern Warfare 3\scripts\Old_School_FFA.pdb
