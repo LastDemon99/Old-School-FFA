@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,7 +11,13 @@ namespace Old_School_FFA
     {
         public OS_FFA()
         {
-            ServerTittle(GSCFunctions.GetDvar("mapname"), "Old School FFA");
+            if (GSCFunctions.GetDvar("g_gametype") != "dm")
+            {
+                GSCFunctions.SetDvar("g_gametype", "dm");
+                Utilities.ExecuteCommand("map_restart");
+                return;
+            }
+
             GSCFunctions.MakeDvarServerInfo("didyouknow", "^2Old School FFA script by LastDemon99");
             GSCFunctions.MakeDvarServerInfo("g_motd", "^2Old School FFA script by LastDemon99");
             GSCFunctions.MakeDvarServerInfo("motd", "^2Old School FFA script by LastDemon99");
