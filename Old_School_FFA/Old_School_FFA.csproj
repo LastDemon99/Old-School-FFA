@@ -43,7 +43,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
     <Compile Include="OS_Data.cs" />
     <Compile Include="OS_FFA.cs" />
     <Compile Include="OS_Utility.cs" />

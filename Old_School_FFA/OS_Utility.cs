@@ -9,7 +9,7 @@ namespace Old_School_FFA
 {
     public partial class OS_FFA 
     {
-        public static int[] RandomNum(int size, int Min, int Max)
+        private static int[] RandomNum(int size, int Min, int Max)
         {
             int[] UniqueArray = new int[size];
             Random rnd = new Random();
@@ -30,14 +30,14 @@ namespace Old_School_FFA
             }
             return UniqueArray;
         }
-        public static void SpawnModel(Vector3 origin, string model)
+        private static void SpawnModel(Vector3 origin, string model)
         {
             Entity entity = GSCFunctions.Spawn("script_model", origin);
             entity.SetModel(model);
             ItemsList.Add(entity);
         }
 
-        public static string FindWepbyModel(string model)
+        private static string FindWepbyModel(string model)
         {
             string nam = null;
             foreach (string info in _ListWeapons)
@@ -51,7 +51,7 @@ namespace Old_School_FFA
 
             return nam;
         }
-        public static string FindModelbyWep(string wep)
+        private static string FindModelbyWep(string wep)
         {
             string nam = null;
             foreach (string info in _ListWeapons)
@@ -65,7 +65,7 @@ namespace Old_School_FFA
 
             return nam;
         }
-        public static bool CheckSlotperk(Entity player, Entity perkfield)
+        private static bool CheckSlotperk(Entity player, Entity perkfield)
         {
             string getperk = "";
             string getfield = perkfield.GetField<string>("perk");
@@ -124,7 +124,7 @@ namespace Old_School_FFA
             return hasperk;
         }
 
-        public static void SetScope(string wepmodel, Entity scope, float h)
+        private static void SetScope(string wepmodel, Entity scope, float h)
         {
             Entity entity = GSCFunctions.Spawn("script_model", scope.Origin + new Vector3(h, 0, 3.7f));
             entity.SetModel(wepmodel);
@@ -133,7 +133,7 @@ namespace Old_School_FFA
             scope.SetField("scope", entity);
         }
 
-        public static void DisableSelectClass(Entity player)
+        private static void DisableSelectClass(Entity player)
         {
             GSCFunctions.ClosePopUpMenu(player, "");
             GSCFunctions.CloseInGameMenu(player);
@@ -150,7 +150,7 @@ namespace Old_School_FFA
                 }
             });
         }
-        public static void ServerWelcomeTittle(Entity player, string tittle, float[] rgb)
+        private static void ServerWelcomeTittle(Entity player, string tittle, float[] rgb)
         {
             player.SetField("welcome", 0);
             player.SpawnedPlayer += new Action(() =>

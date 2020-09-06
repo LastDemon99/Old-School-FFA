@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -40,7 +40,7 @@ namespace Old_School_FFA
             });
         }
 
-        public static void LoadTargetZones()
+        private void LoadTargetZones()
         {
             switch (GSCFunctions.GetDvar("mapname"))
             {
@@ -100,7 +100,7 @@ namespace Old_School_FFA
                     break;
             }
         }
-        public static void SpawnItems()
+        private void SpawnItems()
         {
             List<string> Items = new List<string>();
             int[] itemCount = RandomNum(TargetZones.Length, 0, OS_Weapons.Length);
@@ -173,7 +173,7 @@ namespace Old_School_FFA
                 return true;
             });
         }
-        public static void PreCachePerksHud()
+        private void PreCachePerksHud()
         {
             GSCFunctions.PreCacheShader("specialty_longersprint_upgrade");
             GSCFunctions.PreCacheShader("specialty_fastreload_upgrade");
@@ -184,7 +184,7 @@ namespace Old_School_FFA
             GSCFunctions.PreCacheShader("specialty_steadyaim_upgrade");
             GSCFunctions.PreCacheShader("specialty_quieter_upgrade");
         }
-        public static void HideOnUseItem()
+        private void HideOnUseItem()
         {
             OnInterval(100, () =>
             {
@@ -217,7 +217,7 @@ namespace Old_School_FFA
             });
         }
 
-        public static void OnSpawnPlayer(Entity player)
+        private void OnSpawnPlayer(Entity player)
         {
             DisableSelectClass(player);
             GSCFunctions.DisableWeaponPickup(player);
@@ -236,7 +236,7 @@ namespace Old_School_FFA
                 player.SetField("perkslot", new Vector3(-1, -1, -1));
             });
         }
-        public static void UsablesHud(Entity player)
+        private void UsablesHud(Entity player)
         {
             player.SetField("msgstate", 0);
 
@@ -275,7 +275,7 @@ namespace Old_School_FFA
                 return true;
             });
         }
-        public static void UseItem(Entity player)
+        private void UseItem(Entity player)
         {
             player.NotifyOnPlayerCommand("use", "+activate");
             player.OnNotify("use", entity =>
@@ -322,9 +322,9 @@ namespace Old_School_FFA
                     });
                 }
             });
-        }        
+        }
 
-        public static void GetItem(Entity player, string modelname)
+        private void GetItem(Entity player, string modelname)
         {
             try
             {
@@ -336,7 +336,7 @@ namespace Old_School_FFA
             }
             catch { };
         }
-        public static void GivePerkHud(Entity player, string name, string perk, string color)
+        private void GivePerkHud(Entity player, string name, string perk, string color)
         {
             HudElem perkicon = HudElem.CreateIcon(player, perk, 90, 90);
             perkicon.Parent = HudElem.UIParent;
@@ -368,7 +368,7 @@ namespace Old_School_FFA
                     break;
             }
         }
-        public static void ShowPerksHud(Entity player, Entity perkfield)
+        private void ShowPerksHud(Entity player, Entity perkfield)
         {
             if (perkfield.GetField<string>("perk") == "specialty_longersprint")
                 GivePerkHud(player, "Extreme Conditioning", "specialty_longersprint_upgrade", "blue");
@@ -385,7 +385,7 @@ namespace Old_School_FFA
             else if (perkfield.GetField<string>("perk") == "specialty_quieter")
                 GivePerkHud(player, "Dead Silent", "specialty_quieter_upgrade", "green");
         }
-        public static void SlotState(Entity player, Entity perkfield)
+        private void SlotState(Entity player, Entity perkfield)
         {
             string getperk = "";
             int perkIndex = 0;
