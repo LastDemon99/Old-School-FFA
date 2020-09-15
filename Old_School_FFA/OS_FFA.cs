@@ -11,6 +11,8 @@ namespace Old_School_FFA
     {
         public OS_FFA()
         {
+            ServerTittle(GSCFunctions.GetDvar("mapname"), "Old School FFA");
+
             if (GSCFunctions.GetDvar("g_gametype") != "dm")
             {
                 GSCFunctions.SetDvar("g_gametype", "dm");
@@ -26,7 +28,6 @@ namespace Old_School_FFA
             SpawnItems();
             PreCachePerksHud();
 
-            HideOnUseItem();
             PlayerConnected += new Action<Entity>((player) =>
             {
                 ServerWelcomeTittle(player, "Old School FFA", new float[] { 0, 0, 1 });
@@ -102,119 +103,103 @@ namespace Old_School_FFA
         }
         private void SpawnItems()
         {
-            List<string> Items = new List<string>();
+            //Spawn FX
+
+
+            //Set Weapons 
+            List<string> Weapons = new List<string>();
             int[] itemCount = RandomNum(TargetZones.Length, 0, OS_Weapons.Length);
             for (int i = 0; i < itemCount.Length; i++)
-                Items.Add(OS_Weapons[itemCount[i]]);
+                Weapons.Add(OS_Weapons[itemCount[i]]);
 
+            //Spawn Weapons & FX
             int spawnedcount = 0;
             foreach (Vector3 zone in TargetZones)
             {
-                SpawnModel(zone - new Vector3(0, 0, 10), FindModelbyWep(Items[spawnedcount]));
+                Entity fx = SpawnTriggerFX(goldcircle_fx, zone + new Vector3(0, 0, -50));
+                FXList.Add(fx);
+
+                Entity wep = SpawnModel(zone - new Vector3(0, 0, 10), FindModelbyWep(Weapons[spawnedcount]));
+                ItemsList.Add(wep);
                 spawnedcount++;
             }
 
-            foreach (Entity ent in ItemsList)
+            //Items Init
+            foreach (Entity Items in ItemsList)
             {
-                ent.SetField("used", 0);
+                Items.SetField("used", 0);
+                if (!OS_Models.Contains(Items.Model))
+                    Items.Delete();
 
-                if (!OS_Models.Contains(ent.Model))
-                    ent.Delete();
-
-                switch (ent.Model)
-                {
-                    case "weapon_dragunov_iw5":
-                        SetScope("weapon_dragunov_scope_iw5", ent, -6);
-                        break;
-                    case "weapon_rsass_iw5":
-                        SetScope("weapon_rsass_scope_iw5", ent, -6);
-                        break;
-                    case "weapon_as50_iw5":
-                        SetScope("weapon_as50_scope_iw5", ent, 5);
-                        break;
-                    case "weapon_l96a1_iw5":
-                        SetScope("weapon_l96a1_scope_iw5", ent, -6);
-                        break;
-                    case "weapon_remington_msr_iw5":
-                        SetScope("weapon_remington_msr_scope_iw5", ent, -6);
-                        break;
-
-                }
+                if (!GSCFunctions.IsDefined(Items))
+                    ItemsList.Remove(Items);
             }
 
-            List<int> pnum = new List<int>();
+            //Set Perk Zone
+            List<int> PerkZone = new List<int>();
             int[] objperkszone = RandomNum(3, 0, ItemsList.Count);
             for (int i = 0; i < objperkszone.Length; i++)
-                pnum.Add(objperkszone[i]);
+                PerkZone.Add(objperkszone[i]);
 
-            List<int> numperk = new List<int>();
+            //Set Perks
+            List<int> Perks = new List<int>();
             int[] _numperk = RandomNum(3, 0, os_perks.Length);
             for (int i = 0; i < _numperk.Length; i++)
-                numperk.Add(_numperk[i]);
+                Perks.Add(_numperk[i]);
 
+            //Spawn Perks
             int count = 0;
-            foreach (int num in pnum)
+            foreach (int num in PerkZone)
             {
-                if (ItemsList[num].HasField("scope"))
-                {
-                    Entity scope = ItemsList[num].GetField<Entity>("scope");
-                    scope.Delete();
-                }
                 ItemsList[num].SetModel(os_perk);
 
                 ItemsList[num].SetField("perk", os_perks[_numperk[count]]);
                 count++;
             }
 
-            OnInterval(1000, () =>
+            //Rotate Models
+            OnInterval(5000, () =>
             {
                 foreach (Entity ent in ItemsList)
-                    ent.RotateYaw(360, 4);
+                    ent.RotateYaw(360, 5);
                 return true;
             });
-        }
-        private void PreCachePerksHud()
-        {
-            GSCFunctions.PreCacheShader("specialty_longersprint_upgrade");
-            GSCFunctions.PreCacheShader("specialty_fastreload_upgrade");
-            GSCFunctions.PreCacheShader("specialty_quickdraw_upgrade");
-            GSCFunctions.PreCacheShader("specialty_stalker_upgrade");
-            GSCFunctions.PreCacheShader("specialty_coldblooded_upgrade");
-            GSCFunctions.PreCacheShader("specialty_paint_upgrade");
-            GSCFunctions.PreCacheShader("specialty_steadyaim_upgrade");
-            GSCFunctions.PreCacheShader("specialty_quieter_upgrade");
         }
         private void HideOnUseItem()
         {
-            OnInterval(100, () =>
+            foreach (Entity ent in ItemsList)
             {
-                foreach (Entity ent in ItemsList)
+                if (ent.GetField<int>("used") == 1)
                 {
-                    if (ent.GetField<int>("used") == 1)
-                    {
-                        if (ent.HasField("scope"))
+                    ent.Hide();
+
+                    foreach (Entity fx in FXList)
+                        if (fx.Origin.DistanceTo(ent.Origin + new Vector3(0, 0, -50)) <= 10)
                         {
-                            Entity scope = ent.GetField<Entity>("scope");
-                            scope.Hide();
-                            ent.Hide();
+                            FXList.Remove(fx);
+                            fx.Delete();
+                            break;
                         }
-                        else
-                            ent.Hide();
-                    }
-                    else
-                    {
-                        if (ent.HasField("scope"))
-                        {
-                            Entity scope = ent.GetField<Entity>("scope");
-                            scope.Show();
-                            ent.Show();
-                        }
-                        else
-                            ent.Show();
-                    }
+
+                    Entity newfx = SpawnTriggerFX(redcircle_fx, ent.Origin + new Vector3(0, 0, -50));
+                    FXList.Add(newfx);
                 }
-                return true;
-            });
+                else
+                {
+                    ent.Show();
+
+                    foreach (Entity fx in FXList)
+                        if (fx.Origin.DistanceTo(ent.Origin + new Vector3(0, 0, -50)) <= 10)
+                        {
+                            FXList.Remove(fx);
+                            fx.Delete();
+                            break;
+                        }
+
+                    Entity newfx = SpawnTriggerFX(goldcircle_fx, ent.Origin + new Vector3(0, 0, -50));
+                    FXList.Add(newfx);                    
+                }
+            }
         }
 
         private void OnSpawnPlayer(Entity player)
@@ -298,6 +283,7 @@ namespace Old_School_FFA
                                 player.PlayLocalSound("scavenger_pack_pickup");
                                 player.SetPerk(obj.GetField<string>("perk"), true, false);
                                 obj.SetField("used", 1);
+                                HideOnUseItem();
                                 CheckSlotperk(player, obj);
                             }
                         }
@@ -306,12 +292,14 @@ namespace Old_School_FFA
                             player.PlayLocalSound("mp_suitcase_pickup");
                             GetItem(player, obj.Model);
                             obj.SetField("used", 1);
+                            HideOnUseItem();
                         }
                         else if (player.GetAmmoCount(FindWepbyModel(obj.Model)) != GSCFunctions.WeaponStartAmmo(FindWepbyModel(obj.Model)))
                         {
                             player.PlayLocalSound("scavenger_pack_pickup");
                             player.GiveStartAmmo(FindWepbyModel(obj.Model));
                             obj.SetField("used", 1);
+                            HideOnUseItem();
                         }
                     }
 
@@ -319,6 +307,8 @@ namespace Old_School_FFA
                     {
                         if (obj.GetField<int>("used") == 1)
                             obj.SetField("used", 0);
+
+                        HideOnUseItem();
                     });
                 }
             });
@@ -430,6 +420,18 @@ namespace Old_School_FFA
                 player.SetField("perkslot", new Vector3(perkslot.X, perkIndex, perkslot.Z));
             else if (perkslot.Z == -1f && perkIndex != perkslot.Y && perkIndex != perkslot.X)
                 player.SetField("perkslot", new Vector3(perkslot.X, perkslot.Y, perkIndex));
+        }
+
+        private void PreCachePerksHud()
+        {
+            GSCFunctions.PreCacheShader("specialty_longersprint_upgrade");
+            GSCFunctions.PreCacheShader("specialty_fastreload_upgrade");
+            GSCFunctions.PreCacheShader("specialty_quickdraw_upgrade");
+            GSCFunctions.PreCacheShader("specialty_stalker_upgrade");
+            GSCFunctions.PreCacheShader("specialty_coldblooded_upgrade");
+            GSCFunctions.PreCacheShader("specialty_paint_upgrade");
+            GSCFunctions.PreCacheShader("specialty_steadyaim_upgrade");
+            GSCFunctions.PreCacheShader("specialty_quieter_upgrade");
         }
     }
 }
