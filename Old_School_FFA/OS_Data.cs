@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,11 +11,15 @@ namespace Old_School_FFA
     {
         private static Vector3[] TargetZones;
         private static List<Entity> ItemsList = new List<Entity>();
+        private static List<Entity> FXList = new List<Entity>();
 
         private static string os_primarywep { get { return "iw5_skorpion_mp"; } }
         private static string os_secondarywep { get { return "iw5_usp45_mp"; } }
         private static string os_perk { get { return "weapon_scavenger_grenadebag"; } }
         private static string[] os_perks = { "specialty_longersprint", "specialty_fastreload", "specialty_quickdraw", "specialty_stalker", "specialty_paint", "specialty_bulletaccuracy", "specialty_quieter" };
+
+        private static int redcircle_fx = GSCFunctions.LoadFX("misc/ui_flagbase_red");
+        private static int goldcircle_fx = GSCFunctions.LoadFX("misc/ui_flagbase_gold");
 
         #region Weapons data
         private static string[] OS_Weapons { get { return _ListWeapons.Select(wep => wep.Split(';')[0]).ToArray(); } }
