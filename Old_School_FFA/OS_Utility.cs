@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -30,11 +30,12 @@ namespace Old_School_FFA
             }
             return UniqueArray;
         }
-        private static void SpawnModel(Vector3 origin, string model)
+        private static Entity SpawnModel(Vector3 origin, string model)
         {
             Entity entity = GSCFunctions.Spawn("script_model", origin);
             entity.SetModel(model);
-            ItemsList.Add(entity);
+
+            return entity;
         }
 
         private static string FindWepbyModel(string model)
@@ -124,15 +125,6 @@ namespace Old_School_FFA
             return hasperk;
         }
 
-        private static void SetScope(string wepmodel, Entity scope, float h)
-        {
-            Entity entity = GSCFunctions.Spawn("script_model", scope.Origin + new Vector3(h, 0, 3.7f));
-            entity.SetModel(wepmodel);
-            entity.EnableLinkTo();
-            entity.LinkTo(scope);
-            scope.SetField("scope", entity);
-        }
-
         private static void DisableSelectClass(Entity player)
         {
             GSCFunctions.ClosePopUpMenu(player, "");
@@ -168,6 +160,23 @@ namespace Old_School_FFA
                     AfterDelay(5000, () => { serverWelcome.Destroy(); });
                 }
             });
+        }
+
+        private static Entity SpawnTriggerFX(int fxid, Vector3 pos)
+        {
+            Vector3 upangles = GSCFunctions.VectorToAngles(new Vector3(0, 0, 1000));
+            Vector3 forward = GSCFunctions.AnglesToForward(upangles);
+            Vector3 right = GSCFunctions.AnglesToRight(upangles);
+
+            Entity effect = GSCFunctions.SpawnFX(fxid, pos, forward, right);
+            GSCFunctions.TriggerFX(effect);
+
+            return effect;
+        }
+
+        public static void PrintLog(string message)
+        {
+            InfinityScript.Log.Write(LogLevel.All, message);
         }
     }
 }
