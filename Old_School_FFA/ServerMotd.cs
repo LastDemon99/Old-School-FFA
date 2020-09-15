@@ -8,6 +8,9 @@ using System.Threading;
 using InfinityScript;
 using System.Text.RegularExpressions;
 
+////////////////////////////////////////////////
+// ServerTittle Author: Frederica Bernkastel //
+///////////////////////////////////////////////
 namespace Old_School_FFA
 {
     public partial class OS_FFA
